@@ -1,0 +1,87 @@
+const webpack = require("webpack");
+const path = require('path');
+const fs = require('fs');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CleanCSSPlugin = require("less-plugin-clean-css");
+const webuilderResolver = require("webpack-webuilder-resolver");
+const extractText = new ExtractTextPlugin({
+    filename: "[name].css"
+});
+const webuilderConfig = require('./webuilder.json');
+webuilderResolver.WebuilderResolver.setSources(webuilderConfig.sources);
+module.exports = {
+	entry: webuilderConfig.entries,
+	output: {
+		filename: '[name].js',
+		chunkFilename: '[name].js',
+		path: path.resolve(__dirname, "../../public/frontend/dist/")
+	},
+
+	resolve: {
+		plugins:[webuilderResolver.WebuilderResolver],
+		extensions: ['.ts', '.js',".less", ".css"]
+	},
+	module: {
+		rules: [
+			{test: /\.less$/,use: extractText.extract({use: [{
+				loader: "css-loader",
+				options: {
+					minimize: true
+				}
+			}, {
+				loader: "less-loader",
+				options: {
+                    plugins: [new CleanCSSPlugin({ advanced: true })]
+                }
+			}]})},
+			{test: /\.css/,use: extractText.extract({use: [
+				{
+					loader: "css-loader",
+					options: {
+						minimize: true
+					}
+				}
+			]})},
+			{ test: /\.json$/,loader: "json-loader" },
+			{ test: /\.png$/,loader: "file-loader" },
+			{ test: /\.jpg$/,loader: "file-loader" },
+			{ test: /\.gif$/,loader: "file-loader" },
+			{ test: /\.woff2?$/,loader: "file-loader" },
+			{ test: /\.eot$/,loader: "file-loader" },
+			{ test: /\.ttf$/,loader: "file-loader" },
+			{ test: /\.svg$/,loader: "file-loader" },
+			{ 
+				test: /\.tsx?$/,
+				loader: "ts-loader",
+				options:{
+					transpileOnly: true,
+					logLevel:'warn',
+					compilerOptions:{
+						sourceMap:false
+					}
+				}
+	 		}
+		]
+	},
+	plugins:[
+		extractText,
+		new webpack.optimize.UglifyJsPlugin({
+			minimize: false,
+			output:{
+				comments:false
+			}
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+            name: "common",
+            minChunks: function(module) {
+				return webuilderResolver.IsCommonModule(module);
+			}
+        }),
+		new webpack.ProvidePlugin({
+			$: "jquery",
+			jQuery: "jquery",
+			"window.jQuery":"jquery"
+		})
+	]
+
+};

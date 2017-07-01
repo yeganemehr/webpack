@@ -1,0 +1,11 @@
+{
+	"permissions": "*",
+	"autoload": "autoloader.json",
+	"dependencies": ["base", "npm"],
+	"events": [
+		{
+			"name":"\\packages\\base\\view\\events\\beforeLoad",
+			"listener": "listeners\\base@beforeLoadView"
+		}
+	]
+}

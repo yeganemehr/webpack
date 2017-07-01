@@ -1,0 +1,12 @@
+{
+	"files":[
+		{
+			"classes":["processes\\webpack"],
+			"file":"processes/webpack.php"
+		},
+		{
+			"classes":["listeners\\base"],
+			"file":"listeners/base.php"
+		}
+	]
+}
