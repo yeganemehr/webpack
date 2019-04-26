@@ -4,6 +4,8 @@ const fs = require('fs');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CleanCSSPlugin = require("less-plugin-clean-css");
 const webuilderResolver = require("webpack-webuilder-resolver");
+const precss = require("precss");
+const autoprefixer = require("autoprefixer");
 const extractText = new ExtractTextPlugin({
     filename: "[name].css"
 });
@@ -19,7 +21,7 @@ module.exports = {
 
 	resolve: {
 		plugins:[webuilderResolver.WebuilderResolver],
-		extensions: ['.ts', '.js',".less", ".css"]
+		extensions: ['.ts', '.js',".less", ".css", ".sass", ".scss"]
 	},
 	module: {
 		rules: [
@@ -42,6 +44,22 @@ module.exports = {
 					}
 				}
 			]})},
+			{
+				test: /\.(scss)$/,
+				use: extractText.extract({use: [
+					'css-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							plugins: function () { 
+								return [precss,autoprefixer];
+							}
+						}
+					}, 
+					'sass-loader',
+				]})
+				
+			},
 			{ test: /\.json$/,loader: "json-loader" },
 			{ test: /\.png$/,loader: "file-loader" },
 			{ test: /\.jpg$/,loader: "file-loader" },
