@@ -131,7 +131,11 @@ class webpack extends process{
 			'less-loader' => '~4.0.4',
 			'style-loader' => '~0.18.2',
 			'url-loader' => '~0.5.9',
-			'webpack-webuilder-resolver' => '^1.0.0'
+			"webpack-webuilder-resolver" => "^1.0.0",
+			"sass-loader" => "^7.1.0",
+			"node-sass" => "^4.11.0",
+			"precss" => "^4.0.0",
+			"autoprefixer" => "^9.4.7",
 		];
 	}
 	private function config(array $sources){
@@ -161,7 +165,7 @@ class webpack extends process{
 				$webuilderData['entries'][$name] = array();
 			}
 			foreach($assets as $asset){
-				if(in_array($asset['type'], ['js', 'css', 'less', 'ts'])){
+				if(in_array($asset['type'], ['js', 'css', 'less', 'ts', "sass", "scss"])){
 					if(isset($asset['file'])){
 						$file = realpath($source->getPath().'/'.$asset['file']);
 						if(!$file){
@@ -195,7 +199,7 @@ class webpack extends process{
 		foreach($sources as $source){
 			$assets = $source->getAssets();
 			foreach($assets as $asset){
-				if(in_array($asset['type'], ['js', 'css', 'less', 'ts'])){
+				if(in_array($asset['type'], ['js', 'css', 'less', 'ts', "sass", "scss"])){
 					if(isset($asset['file'])){
 						$result['handledFiles'][$source->getName()][] = $source->getPath().'/'.$asset['file'];
 					}
