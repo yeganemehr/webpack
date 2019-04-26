@@ -136,6 +136,7 @@ class webpack extends process{
 			"node-sass" => "^4.11.0",
 			"precss" => "^4.0.0",
 			"autoprefixer" => "^9.4.7",
+			"postcss-loader" => "^3.0.0",
 		];
 	}
 	private function config(array $sources){
